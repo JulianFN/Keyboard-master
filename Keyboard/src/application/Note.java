@@ -1,6 +1,12 @@
 package application;
 
 
+import javafx.util.Duration;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,52 +19,63 @@ public class Note
 	private double length;
 	private int    key;
 	private GraphicsContext graphics;
-	private int x;
-	private double y;
+	private DoubleProperty  x;
+	private DoubleProperty  y;
 	public Note(GraphicsContext gc,double t,int l,double e)
 	{
 		key=l;
 		graphics=gc;
 		time=t;
 		length=e;
-		
+		this.draw(false);
+		 Timeline timeline = new Timeline(
+		            new KeyFrame(Duration.seconds(0),
+		                    new KeyValue(x, 0),
+		                    new KeyValue(y, 0)
+		            ),
+		            new KeyFrame(Duration.seconds(3),
+		                    new KeyValue(x, 600),
+		                    new KeyValue(y, 600)
+		            )
+		        );
+		 AnimationTimer timer = new AnimationTimer() {
+	            @Override
+	            public void handle(long now) 
+	            {
+	                gc.setFill(Color.CORNSILK);
+	                gc.fillRect(x.doubleValue(), y.doubleValue(), 200, 200);	                
+	            }
+		 };
+		 timer.start();
+	       timeline.play();
 	}
 	public void draw(boolean black)
 	{
 		graphics.setFill(Color.RED);
 		if(black)
 		{
-			graphics.fillText(";alkjf", 500, 100);
-			graphics.fillRect(((double) key*37)+25, 0,SCREEN_BOUNDS.getWidth()/100,length);
-			x=key*37+25;
-			y=(SCREEN_BOUNDS.getHeight()/1.2)+length;
+			graphics.fillRect(key*9+5,500,8,60);
 		}
 		else
 		{
-			graphics.fillRect((double) key*37,SCREEN_BOUNDS.getHeight(),SCREEN_BOUNDS.getWidth()/52,length);
-			x=key*37;
-			y=SCREEN_BOUNDS.getHeight()/1.072 +length;
+			graphics.fillRect(key*9,560,17.9,60);
 		}
 		System.out.println("x "+x+"y "+y);
 	}
 	public boolean isPlayed()
 	{
-		return y-SCREEN_BOUNDS.getHeight()/1.2<=20;
+		return false;
 	}
 	public void changeColor(boolean black)
 	{
 		graphics.setFill(Color.ORANGE);
 		if(black)
 		{
-			graphics.fillRect(((double) key*37)+25, SCREEN_BOUNDS.getHeight(),SCREEN_BOUNDS.getWidth()/100,SCREEN_BOUNDS.getHeight()/10);
-			x=key*37+25;
-			y=(SCREEN_BOUNDS.getHeight()/1.2)+SCREEN_BOUNDS.getHeight()/10;
+			graphics.fillRect(key*9+5,500,8,60);
 		}
 		else
 		{
 			graphics.fillRect((double) key*37,SCREEN_BOUNDS.getHeight()/1.072,SCREEN_BOUNDS.getWidth()/52,SCREEN_BOUNDS.getHeight()/10);
-			x=key*37;
-			y=SCREEN_BOUNDS.getHeight()/1.072 +SCREEN_BOUNDS.getHeight()/10;
 		}
 	}
 	public int getKey()

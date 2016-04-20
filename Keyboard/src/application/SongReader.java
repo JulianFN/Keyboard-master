@@ -40,7 +40,6 @@ public class SongReader
 	                        int note = key % 12;
 	                        String noteName = NOTE_NAMES[note];
 	                        int velocity = sm.getData2();
-	                        notes.add(new Note(gc,sequence.getDivisionType()/event.getTick(),key));
 	                        System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
 	                    } else if (sm.getCommand() == NOTE_OFF) {
 	                        int key = sm.getData1();

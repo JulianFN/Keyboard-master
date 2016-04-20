@@ -1,0 +1,71 @@
+package application;
+
+import javafx.animation.*;
+import javafx.application.Application;
+import javafx.beans.property.*;
+import javafx.scene.*;
+import javafx.scene.canvas.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+public class AnimatedCircleOnCanvas extends Application {
+    public static final double W = 200; // canvas dimensions.
+    public static final double H = 200;
+
+    public static final double D = 20;  // diameter.
+
+    @Override public void start(Stage stage) {
+        DoubleProperty x  = new SimpleDoubleProperty();
+        DoubleProperty y  = new SimpleDoubleProperty();
+
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.seconds(0),
+                    new KeyValue(x, 0),
+                    new KeyValue(y, 0)
+            ),
+            new KeyFrame(Duration.seconds(3),
+                    new KeyValue(x, W - D),
+                    new KeyValue(y, H - D)
+            )
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        Pane pane = new Pane();
+        final Canvas canvas = new Canvas(W, H);
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.setFill(Color.CORNSILK);
+                gc.fillRect(0, 0, W, H);
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillOval(
+                    x.doubleValue(),
+                    y.doubleValue(),
+                    D,
+                    D
+                );
+            }
+        };
+        Rectangle Rect = new Rectangle(100,100,Color.ALICEBLUE);
+        Rect.
+        pane.getChildren().add(new Rectangle(100,100,Color.RED));
+        stage.setScene(
+            new Scene(
+                new Group(
+                    pane
+                )
+            )
+        );
+        stage.show();
+
+        timer.start();
+        timeline.play();
+    }
+
+    public static void main(String[] args) { launch(args); }
+}  
