@@ -1,7 +1,6 @@
 package application;
 
 import java.net.URL;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,18 +19,22 @@ public class Key
 	private Rectangle keyRect;
 	private Rectangle whiteRect;
 	private boolean triggered=false;
+	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
 	public Key(int i)
 	{
+		
 		URL resource = getClass().getResource("Sound"+1+".wav");
-		audio = new AudioClip(resource.toString());
+		//audio = new AudioClip(resource.toString());
 		key=i;
 		note=(i+9)%12;
+		int octave = ((i+9) / 12)-1;
 		if(note>5)
 			color = note%2==0;
 		else
 			color = note%2==1&&note!=5;
 		this.draw();
+		System.out.println(octave+" "+NOTE_NAMES[note]);
 		keyRect.setOnKeyPressed(new EventHandler<KeyEvent>()
 		{
 			 public void handle(KeyEvent event)
@@ -133,5 +136,9 @@ public class Key
 	public AudioClip getAudio()
 	{
 		return audio;
+	}
+	public String getNoteName()
+	{
+		return NOTE_NAMES[note];
 	}
 }
