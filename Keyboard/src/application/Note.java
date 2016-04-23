@@ -30,14 +30,6 @@ public class Note
 		length=e;
 		this.draw(((l+9)%12>5&&(((l+9)%12)%2==0)||((l+9)%12)%2==0 && ((l+9)%12)!=5));
         note.setFill(Color.VIOLET);
-        note.setOnKeyPressed(new EventHandler<KeyEvent>()
-		{
-			 public void handle(KeyEvent event)
-			 {
-				 System.out.println("Yset");
-				 System.out.println(note.getX()+" "+note.getY());
-			 }
-		});
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
         
@@ -47,7 +39,7 @@ public class Note
                     new KeyValue(y, 0)
             ),
             new KeyFrame(Duration.seconds(3),
-                    new KeyValue(x, 800-20),
+                    new KeyValue(x, 780),
                     new KeyValue(y, note.getHeight() +600)
             )
         );
@@ -76,7 +68,11 @@ public class Note
         		{
         			public void handle(KeyEvent event)
         			{
-        				System.out.println(timeline.getCurrentTime().toString()+ " " +timeline.getCurrentRate());
+        				System.out.println(timeline.getCurrentTime().toSeconds()+ " " +timeline.getCurrentRate());
+        				if(isPlayed())
+        				{
+        					System.out.println("Points");
+        				}
         			}
         		});
         timer.start();
@@ -96,11 +92,15 @@ public class Note
 	}
 	public boolean isPlayed()
 	{
-		return (timeline.getCurrentTime().toSeconds()*timeline.getCurrentRate())>=510;
+		return ((timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200) + 60)>=450)&&(timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200))<=510;
 	}
 	public int getKey()
 	{
 		return key;
+	}
+	public Rectangle getNote()
+	{
+		return note;
 	}
 	
 }
