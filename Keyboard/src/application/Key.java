@@ -25,7 +25,7 @@ public class Key
 	{
 		
 		URL resource = getClass().getResource("Sound"+1+".wav");
-		//audio = new AudioClip(resource.toString());
+		audio = new AudioClip(resource.toString());
 		key=i;
 		note=(i+9)%12;
 		int octave = ((i+9) / 12)-1;
@@ -46,7 +46,6 @@ public class Key
 					 {
 						 audio.play(.2);
 						 triggered=true;
-						 System.out.println("good");
 					 }
 					 if(color)
 					 {

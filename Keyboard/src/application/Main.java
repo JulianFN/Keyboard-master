@@ -51,6 +51,7 @@ public class Main extends Application
 	{
 		try 
 		{
+			Pane notes = new Pane();
 			Pane pane = new Pane();
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
@@ -63,15 +64,12 @@ public class Main extends Application
 				}
 			}
 			
-			//Note note =new Note(c.getGraphicsContext2D(),2,52,200);
-//			note.draw(up.isblack(note.getKey()));
+			Note note =new Note(notes,2,13,200);
 	        
 			Group root = new Group();
 			root.getChildren().add(c);
-			//root.getChildren().add(panel);
+			root.getChildren().add(notes);
 			root.getChildren().add(pane);
-			//panel.toBack();
-	        pane.toFront();
 			Scene scene = new Scene(root);
 			
 //			primaryStage.setX(SCREEN_BOUNDS.getMinX());
@@ -80,6 +78,7 @@ public class Main extends Application
 //			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
 		primaryStage.setScene(scene);
+		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, note.getNote().getOnKeyPressed());
 		for(int z =0;z<keys.length;z++)
 		{
 			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED,keys[z].getRect().getOnKeyPressed());
@@ -88,6 +87,7 @@ public class Main extends Application
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.show();
 		} 
+		
 		catch(Exception e) 
 		{
 			e.printStackTrace();
