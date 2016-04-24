@@ -5,7 +5,6 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
@@ -18,21 +17,30 @@ import javafx.util.Duration;
 
 public class Note 
 {
-	private double time;
-	private double length;
+	private long time;
+	private long length;
 	private int    key;
 	private Rectangle note;
 	private Timeline timeline;
-	public Note(Pane s,double t,int l,double e)
+	public  float ticks;
+	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+	
+	public Note(Pane s,float f,int l,long e,float tiks)
 	{
 		key=l;
-		time=t;
+		time=(long) f;
 		length=e;
-		this.draw(((l+9)%12>5&&(((l+9)%12)%2==0)||((l+9)%12)%2==0 && ((l+9)%12)!=5));
-        note.setFill(Color.VIOLET);
+		ticks = tiks; 
+		System.out.println("Sup     "+length+ " " +ticks);
+	}
+	
+	public void play(Pane s)
+	{
+		this.draw(((key+9)%12>5&&(((key+9)%12)%2==0)||((key+9)%12)%2==0 && ((key+9)%12)!=5),length/ticks);
+		System.out.println("same"+(length/ticks));
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
-        
+        note.setFill(Color.RED);
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
                     new KeyValue(x, 0),
@@ -78,16 +86,18 @@ public class Note
         timer.start();
         timeline.play();
 	}
-	public void draw(boolean black)
+	public void draw(boolean black,double le)
 	{
 		if(black)
 		{
-			note = new Rectangle(key*9+5,0,8,60);
+			note = new Rectangle(key*9+5,0,8,le);
 		}
 		else
 		{
 			note = new Rectangle(key*9,0,17.9,60);
 		}
+		note.setArcHeight(20);
+		note.setArcWidth(20);
 		note.setFill(Color.RED);
 	}
 	public boolean isPlayed()
@@ -102,5 +112,17 @@ public class Note
 	{
 		return note;
 	}
-	
+	public long getTime()
+	{
+		return time;
+	}
+	public int compareTo(Note s)
+	{
+		if(this.time>s.getTime())
+			return 1;
+		else if (this.time<s.getTime())
+			return -1;
+		else
+			return 0;
+	}
 }
