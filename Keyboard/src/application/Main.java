@@ -1,51 +1,26 @@
 package application;
 	
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
-import sun.audio.*;
-import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.binding.ListExpression;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 
 public class Main extends Application 
 {
-	  public static final double W = 800; // canvas dimensions.
-	    public static final double H = 1000;
-	    private Rectangle Rect = new Rectangle(100, 40, 15, 150);
-	    public static final double D = 20;  // diameter.
+	private Rectangle Rect = new Rectangle(100, 40, 15, 150);
+	public static final double D = 20;  // diameter.
 	private Canvas c = new Canvas(800,600);
-//	Updater up = new Updater(c.getGraphicsContext2D());
 	private Key[] keys = new Key[88];
-	private ArrayList<AudioClip> noise = new ArrayList<AudioClip>();
-	private boolean[] playing = new boolean[89];
 	
 	public void start(Stage primaryStage) 
 	{
@@ -53,6 +28,7 @@ public class Main extends Application
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
+			SongReader s = new SongReader("Megolovania.mid",notes);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
 			{
@@ -64,7 +40,7 @@ public class Main extends Application
 				}
 			}
 			
-			Note note =new Note(notes,2,13,200);
+			//Note note =new Note(notes,2,13,200);
 	        
 			Group root = new Group();
 			root.getChildren().add(c);
@@ -78,7 +54,8 @@ public class Main extends Application
 //			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
 		primaryStage.setScene(scene);
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, note.getNote().getOnKeyPressed());
+		//primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
+		
 		for(int z =0;z<keys.length;z++)
 		{
 			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED,keys[z].getRect().getOnKeyPressed());
