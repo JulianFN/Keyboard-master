@@ -24,7 +24,7 @@ public class Key
 	{
 		
 		URL resource = getClass().getResource("Sound"+1+".wav");
-		audio = new AudioClip(resource.toString());
+		//audio = new AudioClip(resource.toString());
 		key=i;
 		chKey=i+9;
 		note=(i+9)%12;
