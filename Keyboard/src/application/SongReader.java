@@ -41,7 +41,7 @@ public class SongReader
 	        sequencer.open();
 	        sequencer.setSequence(fi);
 	        int trackNumber = 0;
-	        NoteQueue notes = new NoteQueue(tickPerMic, microSeconds, pan,sequencer);
+	        NoteQueue notes = new NoteQueue(sequence.getTickLength(), microSeconds, pan,sequencer);
 	        for (Track track :  sequence.getTracks()) 
 	        {
 	            trackNumber++;
@@ -56,30 +56,32 @@ public class SongReader
 	                {
 	                    ShortMessage sm = (ShortMessage) message;
 	                    System.out.print("Channel: " + sm.getChannel() + " ");
-	                    if (sm.getCommand() == NOTE_ON) 
+	                    if (sm.getCommand() == NOTE_ON)  
 	                    {
-	                        int key = sm.getData1();
-	                        int octave = (key / 12)-1;
-	                        int note = key % 12;
-	                        String noteName = NOTE_NAMES[note];
-	                        int velocity = sm.getData2();
-	                        System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
-	                        temp.add(new long[]{key, event.getTick()});
-	                        boolean found=false;
-	                        int j =0;
-	                        while(j<temp.size()&&!found)
+	                      int key = sm.getData1();
+	                      int octave = (key / 12)-1;
+	                      int note = key % 12;
+	                      String noteName = NOTE_NAMES[note];
+	                      int velocity = sm.getData2();
+	                      System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
+	                      boolean found=false;
+	                      int j =0;
+	                      while(j<temp.size()&&!found)
 	                        {
 	                        	if(temp.get(j)[0]==key)
 	                        	{
-//	                        		System.out.println(sequence.getMicrosecondLength());
-//	                        		System.out.println(sequence.getTickLength()/sequence.getMicrosecondLength());
-	                        		//System.out.println(tickPerMic);
-	                        		notes.add(new Note(pan,(temp.get(j)[1]/tickPerMic)*1000,key-9,event.getTick()-temp.get(j)[1],tickPerMic));
+	                        		System.out.println(temp.get(j)[1]);
+	                        		System.out.println(event.getTick());
+	                        		System.out.println(event.getTick()-temp.get(j)[1]);
+	                        		notes.add(new Note(pan,event.getTick(),key-9,event.getTick()-temp.get(j)[1],tickPerMic));
 	                        		temp.remove(j);
 	                        		found=true;
 	                        	}
 	                        	j++;
 	                        }
+	                        	                        temp.add(new long[]{key, event.getTick()});
+	                       
+	                      
 	                    } 
 	                    else if (sm.getCommand() == NOTE_OFF) 
 	                    {
@@ -98,7 +100,7 @@ public class SongReader
 //	                        		System.out.println(sequence.getMicrosecondLength());
 //	                        		System.out.println(sequence.getTickLength()/sequence.getMicrosecondLength());
 	                        		//System.out.println(tickPerMic);
-	                        		notes.add(new Note(pan,(temp.get(j)[1]/tickPerMic)*1000,key-9,event.getTick()-temp.get(j)[1],tickPerMic));
+	                        		notes.add(new Note(pan,event.getTick(),key-9,event.getTick()-temp.get(j)[1],tickPerMic));
 	                        		temp.remove(j);
 	                        		found=true;
 	                        	}
@@ -116,9 +118,9 @@ public class SongReader
 	                    System.out.println("Other message: " + message.getClass());
 	                }
 	            }
-	            notes.start();
+	            
 	        }
-	        
+	        notes.start();
 	       
 	    }
 //	    public NoteQueue getQueue()

@@ -27,28 +27,35 @@ public class Note
 	
 	public Note(Pane s,float f,int l,long e,float tiks)
 	{
-		key=l;
+		key=l-12;
 		time=(long) f;
 		length=e;
 		ticks = tiks; 
-		System.out.println("Sup     "+length+ " " +ticks);
+		//System.out.println("Sup     "+length+ " " +ticks);
 	}
 	
 	public void play(Pane s)
 	{
-		this.draw(((key+9)%12>5&&(((key+9)%12)%2==0)||((key+9)%12)%2==0 && ((key+9)%12)!=5),length/ticks);
-		System.out.println("same"+(length/ticks));
+		boolean color;
+		int n=(key+9)%12;
+		//System.out.println(NOTE_NAMES[n]+ " "+ (((key+9) / 12))+" "+key);
+		if(n>5)
+			color = n%2==0;
+		else
+			color = n%2==1&&n!=5;
+		this.draw(color,length);
+		//System.out.println("same"+(length/ticks));
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
-        note.setFill(Color.RED);
+        //note.setFill(Color.CORAL);
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
                     new KeyValue(x, 0),
-                    new KeyValue(y, 0)
+                    new KeyValue(y, -note.getHeight())
             ),
             new KeyFrame(Duration.seconds(3),
                     new KeyValue(x, 780),
-                    new KeyValue(y, note.getHeight() +600)
+                    new KeyValue(y, note.getHeight() +450)
             )
         );
         timeline.setCycleCount(1);
@@ -64,6 +71,7 @@ public class Note
             @Override
             public void handle(long now) 
             {
+            	//System.out.println(y.doubleValue());
                 note.setFill(Color.CORAL);
                 //note.setTranslateX(x.doubleValue());
                 note.setTranslateY(y.doubleValue());
@@ -90,7 +98,8 @@ public class Note
 	{
 		if(black)
 		{
-			note = new Rectangle(key*9+5,0,8,le);
+			System.out.println(3/((le/ticks)/1000000));
+			note = new Rectangle(key*9+5,0,8,3/((le/ticks)/1000000));
 		}
 		else
 		{
@@ -98,7 +107,7 @@ public class Note
 		}
 		note.setArcHeight(20);
 		note.setArcWidth(20);
-		note.setFill(Color.RED);
+		//note.setFill(Color.RED);
 	}
 	public boolean isPlayed()
 	{

@@ -1,6 +1,5 @@
 package application;
 
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -11,18 +10,23 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 
 public class NoteQueue 
 {
-	private long time;
+	private LongProperty time;
 	LinkedList<Note> notes = new LinkedList<Note>();
 	private float ticks;
 	private long seconds;
 	private Pane pane;
-	AnimationTimer timeline;
+	AnimationTimer timer;
+	private Timeline timeLine;
 	Sequencer sequencer;
+	private int note = 0;
 	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq)
 	{
 		sequencer=seq;
@@ -38,43 +42,65 @@ public class NoteQueue
 	}
 	public void start()
 	{
+		time = new SimpleLongProperty();
 		notes.sort(new NoteTimeComparator());
+		//System.out.println(notes.toString());
 		//notes.pollFirst().play(pane);
-		//Timeline time = new Timeline(new KeyFrame(Duration.ofSeconds(1/ticks),new KeyValue(play(time.getCurrentTime().toSeconds()))));
-		time  = System.nanoTime();
-		timeline  = new AnimationTimer()
+		timeLine= new Timeline(
+				new KeyFrame(Duration.millis(0)
+						,new KeyValue(time,0)
+				)
+				,new KeyFrame(Duration.millis(seconds/1000)
+						,new KeyValue(time,ticks)
+						)
+				);
+		timeLine.setCycleCount(1);
+		timer  = new AnimationTimer()
 				{
 					@Override
 					public void handle(long time)
 					{
 						boolean on=false;
-						play((time));
+						play(time);
 						if(!on)
 							startS(on,time);
 					}
 				};
-		timeline.start();
+		timer.start();
+		timeLine.play();
 	}
 	public boolean play(long t)
 	{
 		//System.out.println("time"+ (t-time));
 		//System.out.println("note"+notes.peekFirst().getTime());
-		if(Math.abs((t-time)-(notes.peekFirst().getTime()))<=250000000L)
+		
+		if(notes.peekFirst()!=null)
 		{
-			
-			notes.pollFirst().play(pane);
-			//System.out.println("good");
-			return true;
-		}
-		if(t-time >=seconds)
-		{
-			timeline.stop();
+//			System.out.println(time.longValue()+" "+ notes.peekFirst().getTime()+ " "+ note );
+//			if(note<50 && Math.abs(time.longValue()-(notes.peekFirst().getTime()+200))<=50)
+//			{
+//				notes.pollFirst().play(pane);
+//				System.out.println("yes");
+//				return true;
+//			}
+			//else 
+				if(time.longValue()>notes.peekFirst().getTime())
+			{
+				notes.pollFirst().play(pane);
+				return true;
+			}
+//			else if(Math.abs(time.longValue()-(notes.peekFirst().getTime()))<=100)
+//			{
+//				notes.pollFirst().play(pane);
+//				return true;
+//			}
+			note++;
 		}
 		return false;
 	}
 	public void startS(boolean j,long t)
 	{
-		if(t-time>=2135000000L)
+		if(timeLine.getCurrentTime().toSeconds()>=2.15)
 		{
 			try 
 			{
