@@ -27,6 +27,7 @@ public class NoteQueue
 	private Timeline timeLine;
 	Sequencer sequencer;
 	private Note note;
+	
 	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq)
 	{
 		sequencer=seq;
@@ -36,9 +37,7 @@ public class NoteQueue
 	}
 	public void add(Note s)
 	{
-		
-		notes.addLast(s);
-		
+		notes.addLast(s);	
 	}
 	public void start()
 	{
@@ -77,30 +76,17 @@ public class NoteQueue
 		
 		if(notes.peekFirst()!=null)
 		{
-//			System.out.println(time.longValue()+" "+ notes.peekFirst().getTime()+ " "+ note );
-//			if(note<50 && Math.abs(time.longValue()-(notes.peekFirst().getTime()+200))<=50)
-//			{
-//				notes.pollFirst().play(pane);
-//				System.out.println("yes");
-//				return true;
-//			}
-			//else 
-				if(time.longValue()>notes.peekFirst().getTime())
+			if(time.longValue()>notes.peekFirst().getTime())
 			{
 				notes.pollFirst().play(pane);
 				return true;
 			}
-//			else if(Math.abs(time.longValue()-(notes.peekFirst().getTime()))<=100)
-//			{
-//				notes.pollFirst().play(pane);
-//				return true;
-//			}
 		}
 		return false;
 	}
 	public void startS(boolean j,long t)
 	{
-		if(timeLine.getCurrentTime().toSeconds()>=3.0555)
+		if(timeLine.getCurrentTime().toSeconds()>=2.7777777)
 		{
 			try 
 			{

@@ -4,6 +4,7 @@ package application;
 import java.util.ArrayList;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 public class Main extends Application 
@@ -28,7 +30,7 @@ public class Main extends Application
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
-			SongReader s = new SongReader("Raining Tacos.mid",notes);
+			SongReader s = new SongReader("Megolovania.mid",notes);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
 			{
@@ -63,8 +65,15 @@ public class Main extends Application
 		}
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.show();
-		} 
-		
+		 
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+		{
+		    @Override
+		    public void handle(WindowEvent event) {
+		    	System.exit(0);
+		    }
+		});
+		}
 		catch(Exception e) 
 		{
 			e.printStackTrace();
