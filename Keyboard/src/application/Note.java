@@ -22,11 +22,13 @@ public class Note
 	private int    key;
 	private Rectangle note;
 	private Timeline timeline;
-	public  float ticks;
-	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+	private  float ticks;
+	private Color paint;
+	//public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
-	public Note(Pane s,float f,int l,long e,float tiks)
+	public Note(Pane s,float f,int l,long e,float tiks,Color color)
 	{
+		paint = color;
 		key=l-12;
 		time=(long) f;
 		length=e;
@@ -38,7 +40,7 @@ public class Note
 	{
 		boolean color;
 		int n=(key+9)%12;
-		//System.out.println(NOTE_NAMES[n]+ " "+ (((key+9) / 12))+" "+key);
+		//System.out.println(ticks);
 		if(n>5)
 			color = n%2==0;
 		else
@@ -47,15 +49,15 @@ public class Note
 		//System.out.println("same"+(length/ticks));
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
-        //note.setFill(Color.CORAL);
+        note.setFill(paint);
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
                     new KeyValue(x, 0),
                     new KeyValue(y, -note.getHeight())
             ),
-            new KeyFrame(Duration.seconds(3),
+            new KeyFrame(Duration.seconds(((2*note.getHeight())+550)/180),
                     new KeyValue(x, 780),
-                    new KeyValue(y, note.getHeight() +450)
+                    new KeyValue(y, note.getHeight() +550)
             )
         );
         timeline.setCycleCount(1);
@@ -72,7 +74,7 @@ public class Note
             public void handle(long now) 
             {
             	//System.out.println(y.doubleValue());
-                note.setFill(Color.CORAL);
+                note.setFill(paint);
                 //note.setTranslateX(x.doubleValue());
                 note.setTranslateY(y.doubleValue());
                 //note.translateXProperty();
@@ -84,7 +86,7 @@ public class Note
         		{
         			public void handle(KeyEvent event)
         			{
-        				System.out.println(timeline.getCurrentTime().toSeconds()+ " " +timeline.getCurrentRate());
+        				//System.out.println(timeline.getCurrentTime().toSeconds()+ " " +timeline.getCurrentRate());
         				if(isPlayed())
         				{
         					System.out.println("Points");
@@ -96,18 +98,20 @@ public class Note
 	}
 	public void draw(boolean black,double le)
 	{
+		System.out.println(length);
+		System.out.println(100*((le/ticks)/1000000));
 		if(black)
 		{
-			System.out.println(3/((le/ticks)/1000000));
-			note = new Rectangle(key*9+5,0,8,3/((le/ticks)/1000000));
+			
+			note = new Rectangle(key*9+5,-(100*((le/ticks)/1000000)),8,100*((le/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(key*9,0,17.9,60);
+			note = new Rectangle(key*9,-(100*((le/ticks)/1000000)),17.9,100*((le/ticks)/1000000));
 		}
 		note.setArcHeight(20);
 		note.setArcWidth(20);
-		//note.setFill(Color.RED);
+		note.setFill(paint);
 	}
 	public boolean isPlayed()
 	{
@@ -125,6 +129,10 @@ public class Note
 	{
 		return time;
 	}
+//	public double getDuration()
+//	{
+//		return (note.getHeight()+550)/180;
+//	}
 	public int compareTo(Note s)
 	{
 		if(this.time>s.getTime())

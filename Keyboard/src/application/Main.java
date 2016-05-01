@@ -28,7 +28,7 @@ public class Main extends Application
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
-			SongReader s = new SongReader("Hot Cross Buns.mid",notes);
+			SongReader s = new SongReader("Raining Tacos.mid",notes);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
 			{
