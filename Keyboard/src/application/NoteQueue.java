@@ -26,7 +26,7 @@ public class NoteQueue
 	AnimationTimer timer;
 	private Timeline timeLine;
 	Sequencer sequencer;
-	private int note = 0;
+	private Note note;
 	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq)
 	{
 		sequencer=seq;
@@ -44,6 +44,7 @@ public class NoteQueue
 	{
 		time = new SimpleLongProperty();
 		notes.sort(new NoteTimeComparator());
+		note = notes.peekFirst();
 		//System.out.println(notes.toString());
 		//notes.pollFirst().play(pane);
 		timeLine= new Timeline(
@@ -94,13 +95,12 @@ public class NoteQueue
 //				notes.pollFirst().play(pane);
 //				return true;
 //			}
-			note++;
 		}
 		return false;
 	}
 	public void startS(boolean j,long t)
 	{
-		if(timeLine.getCurrentTime().toSeconds()>=2.15)
+		if(timeLine.getCurrentTime().toSeconds()>=3.0555)
 		{
 			try 
 			{
