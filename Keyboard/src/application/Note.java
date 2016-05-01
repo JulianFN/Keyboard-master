@@ -53,10 +53,10 @@ public class Note
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
                     new KeyValue(x, 0),
-                    new KeyValue(y, -note.getHeight())
+                    new KeyValue(y, 0)
             ),
-            new KeyFrame(Duration.seconds(((2*note.getHeight())+550)/180),
-                    new KeyValue(x, 780),
+            new KeyFrame(Duration.seconds(((note.getHeight())+550)/180),
+                    new KeyValue(x, 0),
                     new KeyValue(y, note.getHeight() +550)
             )
         );
@@ -78,7 +78,8 @@ public class Note
                 //note.setTranslateX(x.doubleValue());
                 note.setTranslateY(y.doubleValue());
                 //note.translateXProperty();
-                note.translateYProperty();     
+                note.translateYProperty();  
+                //System.out.println(y.doubleValue());
            }
         };
         s.getChildren().add(note);
@@ -98,19 +99,22 @@ public class Note
 	}
 	public void draw(boolean black,double le)
 	{
-		System.out.println(length);
-		System.out.println(100*((le/ticks)/1000000));
+		//System.out.println(length);
+		//System.out.println(180*((le/ticks)/1000000));
 		if(black)
 		{
 			
-			note = new Rectangle(key*9+5,-(100*((le/ticks)/1000000)),8,100*((le/ticks)/1000000));
+			note = new Rectangle(key*9+5,-(180*((le/ticks)/1000000)),8,180*((le/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(key*9,-(100*((le/ticks)/1000000)),17.9,100*((le/ticks)/1000000));
+			note = new Rectangle(key*9,-(180*((le/ticks)/1000000)),17.9,180*((le/ticks)/1000000));
 		}
-		note.setArcHeight(20);
-		note.setArcWidth(20);
+		//System.out.println(time +" j "+(note.getY()-(-note.getHeight())));
+		//System.out.println(note.getY());
+		//System.out.println(-180*((le/ticks)/1000000));
+		note.setArcHeight(10);
+		note.setArcWidth(10);
 		note.setFill(paint);
 	}
 	public boolean isPlayed()

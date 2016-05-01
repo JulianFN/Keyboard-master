@@ -26,6 +26,7 @@ public class SongReader
 	    private long microSeconds;
 	    private float tickPerMic;
 	    Sequencer sequencer;
+	    NoteQueue notes;
 	    ArrayList<long[]> temp = new ArrayList<long[]>();
 	    public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	    
@@ -44,7 +45,7 @@ public class SongReader
 	        int trackNumber = -1;
 	        Color[] color = {Color.BLUE,Color.CORAL,Color.CYAN,Color.VIOLET,Color.FUCHSIA,Color.GREEN,Color.RED,Color.ORCHID,Color.TURQUOISE,Color.ORANGERED,Color.DARKORCHID
 	        		,Color.DEEPPINK,Color.DARKGOLDENROD,Color.LIGHTSLATEGREY,Color.CADETBLUE,Color.FIREBRICK,Color.MIDNIGHTBLUE,Color.LIGHTSTEELBLUE};
-	        NoteQueue notes = new NoteQueue(sequence.getTickLength(), microSeconds, pan,sequencer);
+	        notes = new NoteQueue(sequence.getTickLength(), microSeconds, pan,sequencer);
 	        for (Track track :  sequence.getTracks()) 
 	        {
 	            trackNumber++;
@@ -66,7 +67,7 @@ public class SongReader
 	                      int note = key % 12;
 	                      String noteName = NOTE_NAMES[note];
 	                      int velocity = sm.getData2();
-	                      System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
+	                      //System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
 	                      boolean found=false;
 	                      int j =0;
 	                      if(velocity==0)
@@ -76,8 +77,8 @@ public class SongReader
 	                    		  {
 	                    			  //System.out.println(temp.get(j)[1]);
 	                    			  //System.out.println("Note on, " + noteName + octave + " key=" + key + " velocity: " + velocity);
-	                    			  System.out.println(event.getTick()-temp.get(j)[1]);
-	                    			  notes.add(new Note(pan,event.getTick(),key-9,event.getTick()-temp.get(j)[1],tickPerMic,color[trackNumber]));
+	                    			  //System.out.println(event.getTick()-temp.get(j)[1]);
+	                    			  notes.add(new Note(pan,temp.get(j)[1],key-9,event.getTick()-temp.get(j)[1],tickPerMic,color[trackNumber]));
 	                    			  temp.remove(j);
 	                    			  found=true;
 	                    		  }
@@ -105,7 +106,7 @@ public class SongReader
 //	                        		System.out.println(sequence.getMicrosecondLength());
 //	                        		System.out.println(sequence.getTickLength()/sequence.getMicrosecondLength());
 	                        		//System.out.println(tickPerMic);
-	                        		notes.add(new Note(pan,event.getTick(),key-9,event.getTick()-temp.get(j)[1],tickPerMic,color[trackNumber]));
+	                        		notes.add(new Note(pan,temp.get(j)[1],key-9,event.getTick()-temp.get(j)[1],tickPerMic,color[trackNumber]));
 	                        		temp.remove(j);
 	                        		found=true;
 	                        	}
@@ -115,7 +116,7 @@ public class SongReader
 	                    } 
 	                    else 
 	                    {
-	                       // System.out.println("Command:" + sm.getCommand());
+	                        System.out.println("Command:" + sm.getCommand());
 	                    }
 	                } 
 	                else 
@@ -128,23 +129,6 @@ public class SongReader
 	        notes.start();
 	       
 	    }
-//	    public NoteQueue getQueue()
-//		{
-//	    	return notes;
-//		}
-//	    public static void main(String[] args)
-//	    {
-//	    	
-//	    	try 
-//	    	{
-//				SongReader fak = new SongReader("Raiders of the Lost Ark.mid");
-//			}
-//	    	catch (Exception e) 
-//	    	{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	    }
 
 
 }
