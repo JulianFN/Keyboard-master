@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,24 +14,25 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
-public class Main extends Application 
+public class Keyboard 
 {
 	private Rectangle Rect = new Rectangle(100, 40, 15, 150);
 	public static final double D = 20;  // diameter.
 	private Canvas c = new Canvas(800,600);
 	private Key[] keys = new Key[88];
 	
-	public void start(Stage primaryStage) 
+	public Keyboard(Stage primaryStage, String str) 
 	{
 		try 
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
-			SongReader s = new SongReader("Megolovania.mid",notes);
+			SongReader s = new SongReader(str+".mid",notes);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
 			{
@@ -56,6 +58,9 @@ public class Main extends Application
 //			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
 		primaryStage.setScene(scene);
+		Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+	    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+	    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
 		//primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
 		
 		for(int z =0;z<keys.length;z++)
@@ -80,8 +85,8 @@ public class Main extends Application
 		}
 	}
 	
-	public static void main(String[] args) 
-	{
-		launch(args);
-	}
+//	public static void main(String[] args) 
+//	{
+//		launch(args);
+//	}
 }

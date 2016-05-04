@@ -104,11 +104,11 @@ public class Note
 		if(black)
 		{
 			
-			note = new Rectangle(key*9+5,-(180*((le/ticks)/1000000)),8,180*((le/ticks)/1000000));
+			note = new Rectangle(key*9+5,-(180*((le/ticks)/1000000)),4,180*((le/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(key*9,-(180*((le/ticks)/1000000)),17.9,180*((le/ticks)/1000000));
+			note = new Rectangle(key*9,-(180*((le/ticks)/1000000)),6,180*((le/ticks)/1000000));
 		}
 		//System.out.println(time +" j "+(note.getY()-(-note.getHeight())));
 		//System.out.println(note.getY());

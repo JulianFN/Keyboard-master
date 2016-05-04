@@ -86,7 +86,7 @@ public class NoteQueue
 	}
 	public void startS(boolean j,long t)
 	{
-		if(timeLine.getCurrentTime().toSeconds()>=2.7777777)
+		if(timeLine.getCurrentTime().toSeconds()>=(note.getTime()/1000000)+2.77777777)
 		{
 			try 
 			{
