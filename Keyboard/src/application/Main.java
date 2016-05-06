@@ -30,8 +30,6 @@ public class Main extends Application
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
-			SongReader s = new SongReader("Megolovania.mid",notes);
-			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			for(int x =0;x<keys.length;x++)
 			{
 				keys[x] = new Key(x);
@@ -41,6 +39,9 @@ public class Main extends Application
 					pane.getChildren().add(keys[x].getWRect());
 				}
 			}
+			SongReader s = new SongReader("Hot Cross Buns.mid",notes,keys);
+			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
+			
 			
 			//Note note =new Note(notes,2,13,200);
 	        

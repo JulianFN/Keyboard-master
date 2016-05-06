@@ -24,19 +24,24 @@ public class Note
 	private Timeline timeline;
 	private  float ticks;
 	private Color paint;
+	private Key changeColor;
+	private boolean in=true;
+	private Pane x;
 	//public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
-	public Note(Pane s,float f,int l,long e,float tiks,Color color)
+	public Note(Pane s,float f,int l,long e,float tiks,Color color,Key Corrs)
 	{
+		x=s;
 		paint = color;
 		key=l-12;
 		time=(long) f;
 		length=e;
 		ticks = tiks; 
+		changeColor= Corrs;
 		//System.out.println("Sup     "+length+ " " +ticks);
 	}
 	
-	public void play(Pane s)
+	public void play()
 	{
 		boolean color;
 		int n=(key+9)%12;
@@ -47,17 +52,17 @@ public class Note
 			color = n%2==1&&n!=5;
 		this.draw(color,length);
 		//System.out.println("same"+(length/ticks));
-        DoubleProperty x  = new SimpleDoubleProperty();
+        DoubleProperty xdouble  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
         note.setFill(paint);
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
-                    new KeyValue(x, 0),
+                    new KeyValue(xdouble, 0),
                     new KeyValue(y, 0)
             ),
-            new KeyFrame(Duration.seconds(((note.getHeight())+550)/180),
-                    new KeyValue(x, 0),
-                    new KeyValue(y, note.getHeight() +550)
+            new KeyFrame(Duration.seconds(((note.getHeight())+500)/180),
+                    new KeyValue(xdouble, 0),
+                    new KeyValue(y, note.getHeight() +500)
             )
         );
         timeline.setCycleCount(1);
@@ -65,7 +70,10 @@ public class Note
         		{
         			public void handle(ActionEvent event)
         			{
-        				s.getChildren().remove(note);
+        				System.out.println("hi");
+        				changeColor.orginalColor();
+        				x.getChildren().remove(note);
+        				
         			}
         		});
         AnimationTimer timer = new AnimationTimer() 
@@ -79,19 +87,25 @@ public class Note
                 note.setTranslateY(y.doubleValue());
                 //note.translateXProperty();
                 note.translateYProperty();  
+                if(in && timeline.getCurrentTime().toSeconds()>((note.getHeight()/1000000)+500)/180)
+                {
+                	System.out.println("out");
+                	changeColor.changeColor(paint);
+                	in=false;
+                }
                 //System.out.println(y.doubleValue());
            }
         };
-        s.getChildren().add(note);
+        x.getChildren().add(note);
       note.setOnKeyPressed( new EventHandler<KeyEvent>()
         		{
         			public void handle(KeyEvent event)
         			{
-        				//System.out.println(timeline.getCurrentTime().toSeconds()+ " " +timeline.getCurrentRate());
-        				if(isPlayed())
-        				{
-        					System.out.println("Points");
-        				}
+//        				//System.out.println(timeline.getCurrentTime().toSeconds()+ " " +timeline.getCurrentRate());
+//        				if(isPlayed())
+//        				{
+//        					System.out.println("Points");
+//        				}
         			}
         		});
         timer.start();
@@ -104,11 +118,11 @@ public class Note
 		if(black)
 		{
 			
-			note = new Rectangle(key*9+5,-(180*((le/ticks)/1000000)),8,180*((le/ticks)/1000000));
+			note = new Rectangle(key*9+7,-(180*((le/ticks)/1000000)),4,180*((le/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(key*9,-(180*((le/ticks)/1000000)),17.9,180*((le/ticks)/1000000));
+			note = new Rectangle(key*9+4,-(180*((le/ticks)/1000000)),9,180*((le/ticks)/1000000));
 		}
 		//System.out.println(time +" j "+(note.getY()-(-note.getHeight())));
 		//System.out.println(note.getY());
@@ -117,13 +131,21 @@ public class Note
 		note.setArcWidth(10);
 		note.setFill(paint);
 	}
-	public boolean isPlayed()
-	{
-		return ((timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200) + 60)>=450)&&(timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200))<=510;
-	}
+//	public boolean isPlayed()
+//	{
+//		return ((timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200) + 60)>=450)&&(timeline.getCurrentTime().toSeconds()*(timeline.getCurrentRate()*200))<=510;
+//	}
 	public int getKey()
 	{
 		return key;
+	}
+	public void setIn(boolean f)
+	{
+		in=f;
+	}
+	public boolean getIn()
+	{
+		return in;
 	}
 	public Rectangle getNote()
 	{

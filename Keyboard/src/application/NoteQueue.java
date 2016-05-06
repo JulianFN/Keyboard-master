@@ -78,7 +78,7 @@ public class NoteQueue
 		{
 			if(time.longValue()>notes.peekFirst().getTime())
 			{
-				notes.pollFirst().play(pane);
+				notes.pollFirst().play();
 				return true;
 			}
 		}
@@ -86,7 +86,7 @@ public class NoteQueue
 	}
 	public void startS(boolean j,long t)
 	{
-		if(timeLine.getCurrentTime().toSeconds()>=2.7777777)
+		if(timeLine.getCurrentTime().toSeconds()>= (note.getTime()/1000000)+2.7777777)
 		{
 			try 
 			{

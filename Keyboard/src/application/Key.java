@@ -17,16 +17,14 @@ public class Key
 	private Rectangle keyRect;
 	private Rectangle whiteRect;
 	private boolean triggered=false;
-	private int chKey;
 	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
 	public Key(int i)
 	{
 		
 		URL resource = getClass().getResource("Sound"+1+".wav");
-		audio = new AudioClip(resource.toString());
+		//audio = new AudioClip(resource.toString());
 		key=i;
-		chKey=i+9;
 		note=(i+9)%12;
 		int octave = ((i+9) / 12)-1;
 		if(note>5)
@@ -34,7 +32,7 @@ public class Key
 		else
 			color = note%2==1&&note!=5;
 		this.draw();
-		//System.out.println(octave+" "+NOTE_NAMES[note]+" "+key);
+		System.out.println(octave+" "+NOTE_NAMES[note]+" "+key+" "+color);
 		keyRect.setOnKeyPressed(new EventHandler<KeyEvent>()
 		{
 			 public void handle(KeyEvent event)
@@ -47,15 +45,6 @@ public class Key
 						 audio.play(.2);
 						 triggered=true;
 					 }
-					 if(color)
-					 {
-						 keyRect.setFill(Color.DARKGRAY);
-					 }
-					 else
-					 {
-						keyRect.setFill(Color.LIGHTGREY);
-						whiteRect.setFill(Color.LIGHTGREY);
-					 } 
 				 }
 			 }
 		});
@@ -93,20 +82,19 @@ public class Key
 		{
 			keyRect = new Rectangle(key*9,560,17.9,60);
 			keyRect.setFill(Color.WHITE);
-			if( note ==4||note==11)
+			if( note ==4)
 			{
 				whiteRect = new Rectangle(key*9+4, 500,10,60);
 				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
-			else
-			if(note ==2 || note ==7||note==9)
+			else if(note ==2 || note ==7||note==9)
 			{
 				whiteRect = new Rectangle(key*9+4, 500,10,60);
 				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
-			else
+			else 
 			{
 				whiteRect = new Rectangle(key*9, 500,14,60);
 				whiteRect.setFill(Color.WHITE);
@@ -119,7 +107,30 @@ public class Key
 	{
 		return key;
 	}
-	
+	public void changeColor(Color c)
+	{
+		 if(color)
+		 {
+			 keyRect.setFill(c);
+		 }
+		 else
+		 {
+			keyRect.setFill(c);
+			whiteRect.setFill(c);
+		 } 
+	}
+	public void orginalColor()
+	{
+		if(color)
+		 {
+			  keyRect.setFill(Color.BLACK);
+		 }
+		 else
+		 {
+		 	keyRect.setFill(Color.WHITE);
+			whiteRect.setFill(Color.WHITE);
+	   	 }
+	}
 	public Rectangle getRect()
 	{
 		return keyRect;
