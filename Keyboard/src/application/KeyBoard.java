@@ -11,20 +11,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
-public class Main extends Application 
+public class KeyBoard  
 {
 	private Rectangle Rect = new Rectangle(100, 40, 15, 150);
 	public static final double D = 20;  // diameter.
 	private Canvas c = new Canvas(800,600);
 	private Key[] keys = new Key[88];
 	
-	public void start(Stage primaryStage) 
+	public void Keyboard(Stage primaryStage,String str) 
 	{
 		try 
 		{
@@ -39,7 +38,7 @@ public class Main extends Application
 					pane.getChildren().add(keys[x].getWRect());
 				}
 			}
-			SongReader s = new SongReader("Hot Cross Buns.mid",notes,keys);
+			SongReader s = new SongReader(str,notes,keys);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			
 			
@@ -81,8 +80,8 @@ public class Main extends Application
 		}
 	}
 	
-	public static void main(String[] args) 
-	{
-		launch(args);
-	}
+//	public static void main(String[] args) 
+//	{
+//		launch(args);
+//	}
 }
