@@ -27,12 +27,12 @@ public class Key
 		key=i;
 		note=(i+9)%12;
 		int octave = ((i+9) / 12)-1;
-		if(note>5)
-			color = note%2==0;
+		if(note<5)
+			color = note%2==1;
 		else
-			color = note%2==1&&note!=5;
+			color = note%2==0&&note!=5;
 		this.draw();
-		System.out.println(octave+" "+NOTE_NAMES[note]+" "+key+" "+color);
+		System.out.println(octave+" "+note+" "+key+" "+color);
 		keyRect.setOnKeyPressed(new EventHandler<KeyEvent>()
 		{
 			 public void handle(KeyEvent event)
@@ -72,35 +72,43 @@ public class Key
 	
 	public boolean draw()
 	{
+		int x = calculateWhite();
 		if(color)
 		{
-			keyRect = new Rectangle(key*9+5,500,8,60);
+			keyRect = new Rectangle(15.38*x+13.13,500,4.5,60);
+			
 			keyRect.setFill(Color.BLACK);
 			return true;
 		}
 		else
 		{
-			keyRect = new Rectangle(key*9,560,17.9,60);
+			keyRect = new Rectangle(15.38*x,560,15.38,60);
 			keyRect.setFill(Color.WHITE);
-			if( note ==4)
+			if(key ==0||key==87)
 			{
-				whiteRect = new Rectangle(key*9+4, 500,10,60);
+				whiteRect = new Rectangle(15.38*x,500,15.38,60);
+				whiteRect.setFill(Color.WHITE);
+			}
+			else if( note ==4||note ==11)
+			{
+				whiteRect = new Rectangle(15.38*x+2.25, 500,13.13,60);
 				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
 			else if(note ==2 || note ==7||note==9)
 			{
-				whiteRect = new Rectangle(key*9+4, 500,10,60);
+				whiteRect = new Rectangle(15.38*x+2.5, 500,10,60);
 				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
-			else 
+			else
 			{
-				whiteRect = new Rectangle(key*9, 500,14,60);
+				whiteRect = new Rectangle(15.38*x,500,13.13,60);
 				whiteRect.setFill(Color.WHITE);
-				return true;
 			}
+			
 		}
+		return color;
 	}
 	
 	public int getKey()
@@ -118,6 +126,22 @@ public class Key
 			keyRect.setFill(c);
 			whiteRect.setFill(c);
 		 } 
+	}
+	private int calculateWhite()
+	{
+		boolean c;
+		int x =0;
+		for(int k =1;k<=key;k++)
+		{
+			note=(k+9)%12;
+			if(note<5)
+				c = note%2==1;
+			else
+				c = note%2==0&&note!=5;
+			if(!c)
+				x++;	
+		}
+		return x;
 	}
 	public void orginalColor()
 	{

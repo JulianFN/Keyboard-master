@@ -46,10 +46,10 @@ public class Note
 		boolean color;
 		int n=(key+9)%12;
 		//System.out.println(ticks);
-		if(n>5)
-			color = n%2==0;
+		if(n<5)
+			color = n%2==1;
 		else
-			color = n%2==1&&n!=5;
+			color = n%2==0&&n!=5;
 		this.draw(color,length);
 		//System.out.println("same"+(length/ticks));
         DoubleProperty xdouble  = new SimpleDoubleProperty();
@@ -70,7 +70,7 @@ public class Note
         		{
         			public void handle(ActionEvent event)
         			{
-        				System.out.println("hi");
+        				//System.out.println("hi");
         				changeColor.orginalColor();
         				x.getChildren().remove(note);
         				
@@ -89,7 +89,7 @@ public class Note
                 note.translateYProperty();  
                 if(in && timeline.getCurrentTime().toSeconds()>((note.getHeight()/1000000)+500)/180)
                 {
-                	System.out.println("out");
+                	//System.out.println("out");
                 	changeColor.changeColor(paint);
                 	in=false;
                 }
@@ -118,11 +118,11 @@ public class Note
 		if(black)
 		{
 			
-			note = new Rectangle(key*9+7,-(180*((le/ticks)/1000000)),4,180*((le/ticks)/1000000));
+			note = new Rectangle(calculateWhite()*15.38+13,-(180*((le/ticks)/1000000)),4,180*((le/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(key*9+4,-(180*((le/ticks)/1000000)),9,180*((le/ticks)/1000000));
+			note = new Rectangle(calculateWhite()*15.38+3,-(180*((le/ticks)/1000000)),10,180*((le/ticks)/1000000));
 		}
 		//System.out.println(time +" j "+(note.getY()-(-note.getHeight())));
 		//System.out.println(note.getY());
@@ -154,6 +154,23 @@ public class Note
 	public long getTime()
 	{
 		return time;
+	}
+	private int calculateWhite()
+	{
+		int note;
+		boolean c;
+		int x =0;
+		for(int k =1;k<=key;k++)
+		{
+			note=(k+9)%12;
+			if(note<5)
+				c = note%2==1;
+			else
+				c = note%2==0&&note!=5;
+			if(!c)
+				x++;	
+		}
+		return x;
 	}
 //	public double getDuration()
 //	{
