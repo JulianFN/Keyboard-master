@@ -58,6 +58,8 @@ public class Keyboard
 //			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
 		primaryStage.setScene(scene);
+//		Stage cool = new Stage();
+//		cool.show();
 		Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
 	    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
 	    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
