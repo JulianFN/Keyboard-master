@@ -23,7 +23,7 @@ public class KeyBoard
 	private Canvas c = new Canvas(800,600);
 	private Key[] keys = new Key[88];
 	
-	public void Keyboard(Stage primaryStage,String str) 
+	public KeyBoard(Stage primaryStage,String str) 
 	{
 		try 
 		{
