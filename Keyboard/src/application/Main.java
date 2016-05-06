@@ -1,122 +1,84 @@
 package application;
 	
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
-import sun.audio.*;
 import javafx.application.Application;
-import javafx.beans.binding.ListExpression;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 public class Main extends Application 
 {
-	
-	private Canvas c = new Canvas(794,600);
-//	Updater up = new Updater(c.getGraphicsContext2D());
+	private Rectangle Rect = new Rectangle(100, 40, 15, 150);
+	public static final double D = 20;  // diameter.
+	private Canvas c = new Canvas(800,600);
 	private Key[] keys = new Key[88];
-	private ArrayList<AudioClip> noise = new ArrayList<AudioClip>();
-	private boolean[] playing = new boolean[89];
 	
 	public void start(Stage primaryStage) 
 	{
 		try 
 		{
-			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
+			Pane notes = new Pane();
+			Pane pane = new Pane();
 			for(int x =0;x<keys.length;x++)
 			{
-				keys[x] = new Key(x,c.getGraphicsContext2D());
-				keys[x].draw();
+				keys[x] = new Key(x);
+				pane.getChildren().add(keys[x].getRect());
+				if(!keys[x].getColor())
+				{
+					pane.getChildren().add(keys[x].getWRect());
+				}
 			}
-//			Note note =new Note(c.getGraphicsContext2D(),2,52,200);
-//			note.draw(up.isblack(note.getKey()));
+			SongReader s = new SongReader("Hot Cross Buns.mid",notes,keys);
+			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
+			
+			
+			//Note note =new Note(notes,2,13,200);
+	        
 			Group root = new Group();
 			root.getChildren().add(c);
+			root.getChildren().add(notes);
+			root.getChildren().add(pane);
 			Scene scene = new Scene(root);
+			
 //			primaryStage.setX(SCREEN_BOUNDS.getMinX());
 //			primaryStage.setY(SCREEN_BOUNDS.getMinY());
 //			primaryStage.setWidth(SCREEN_BOUNDS.getWidth());
 //			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
+		primaryStage.setScene(scene);
+		//primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
+		
+		for(int z =0;z<keys.length;z++)
+		{
+			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED,keys[z].getRect().getOnKeyPressed());
+			primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED,keys[z].getRect().getOnKeyReleased());
+		}
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
 			primaryStage.show();
-		} 
+		 
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+		{
+		    @Override
+		    public void handle(WindowEvent event) {
+		    	System.exit(0);
+		    }
+		});
+		}
 		catch(Exception e) 
 		{
 			e.printStackTrace();
 		}
-		primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
-		{
-			 public void handle(KeyEvent event)
-			 {
-				 char key = event.getText().charAt(0);
-				 for(int i =0;i<=88;i++)
-				 {
-					 if(key==(char)(i+38))
-					 {
-						 if(keys[i].getColor())
-						 {
-							 if(!playing[i])
-							 {
-								 URL resource = getClass().getResource("/application/Sound1.wav");
-								 AudioClip audio = new AudioClip(resource.toString());
-								 
-								 audio.play(.2);
-								 playing[i]=true;
-							 }
-						 }
-						 else
-						 {
-							 if(!playing[i])
-							 {
-								 URL resource = getClass().getResource("/application/Sound2.wav");
-							 	AudioClip audio = new AudioClip(resource.toString());
-							 	audio.play(.2);
-							 	playing[i]=true;
-							 }
-						 }
-						 System.out.println(i+38);
-						keys[i].changeColor();
-						 
-					 }
-				 }
-				 
-			 }
-		});
-		primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>()
-		{
-			public void handle(KeyEvent event)
-			{
-				char key = event.getText().charAt(0);
-				System.out.println((int)key);
-				for(int i=0;i<=88;i++)
-				{
-					if(key==(char)(i+38))
-					{
-						playing[i]=false;
-						keys[i].originalColor();
-					}
-				}
-			}
-
-		});
-		
 	}
 	
 	public static void main(String[] args) 

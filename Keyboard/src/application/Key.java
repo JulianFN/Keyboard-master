@@ -1,83 +1,143 @@
 package application;
 
-import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
+import java.net.URL;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
+import javafx.scene.shape.Rectangle;
 
 public class Key 
 {
 	private boolean color;
 	private int key;
-	private boolean triggered;
-	private GraphicsContext graphics;
-	private int octave;
 	private int note;
-	private int x;
-	private double width;
 	private AudioClip audio;
+	private Rectangle keyRect;
+	private Rectangle whiteRect;
+	private boolean triggered=false;
+	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
-	public Key(int i,GraphicsContext gc)
+	public Key(int i)
 	{
+		
+		URL resource = getClass().getResource("Sound"+1+".wav");
+		//audio = new AudioClip(resource.toString());
 		key=i;
-		octave = ((i) / 12)-1;
-		note=(i)%12;
+		note=(i+9)%12;
+		int octave = ((i+9) / 12)-1;
 		if(note>5)
 			color = note%2==0;
 		else
 			color = note%2==1&&note!=5;
-		graphics=gc;
-		System.out.println(octave +" "+ note);
+		this.draw();
+		System.out.println(octave+" "+NOTE_NAMES[note]+" "+key+" "+color);
+		keyRect.setOnKeyPressed(new EventHandler<KeyEvent>()
+		{
+			 public void handle(KeyEvent event)
+			 {
+				 char key = event.getText().charAt(0);
+				 if(key==(char)(i+38))
+				 {
+					 if(!triggered)
+					 {
+						 audio.play(.2);
+						 triggered=true;
+					 }
+				 }
+			 }
+		});
+		keyRect.setOnKeyReleased(new EventHandler<KeyEvent>()
+		{
+			 public void handle(KeyEvent event)
+			 {
+				 char key = event.getText().charAt(0);
+				 if(key==(char)(i+38))
+				 {
+					 if(color)
+					 {
+						  keyRect.setFill(Color.BLACK);
+					 }
+					 else
+					 {
+					 	keyRect.setFill(Color.WHITE);
+						whiteRect.setFill(Color.WHITE);
+				   	 }
+					 triggered=false;
+				}
+			 }
+		});
 	}
 	
 	public boolean draw()
 	{
 		if(color)
 		{
-			graphics.setFill(Color.BLACK);
-			graphics.fillRect(key*9+5,500,8,60);
+			keyRect = new Rectangle(key*9+5,500,8,60);
+			keyRect.setFill(Color.BLACK);
 			return true;
 		}
 		else
 		{
-			graphics.setFill(Color.WHITE);
-			graphics.fillRect(key*9,560,17.9,60);
-			if( note ==4||note==11)
+			keyRect = new Rectangle(key*9,560,17.9,60);
+			keyRect.setFill(Color.WHITE);
+			if( note ==4)
 			{
-				graphics.fillRect(key*9+4, 500,10,60);
-				x= key*9+4;
-				width=10;
-				graphics.setFill(Color.BLACK);
-				graphics.fillRect(key*9+9,560 , 1, 60);
+				whiteRect = new Rectangle(key*9+4, 500,10,60);
+				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
-			else
-			if(note ==2 || note ==7||note==9)
+			else if(note ==2 || note ==7||note==9)
 			{
-				graphics.fillRect(key*9+4, 500,10,60);
-				x= key*9+4;
-				width=10;
+				whiteRect = new Rectangle(key*9+4, 500,10,60);
+				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
-			else
+			else 
 			{
-				graphics.fillRect(key*9, 500,14,60);
-				x= key*9;
-				width=14;
+				whiteRect = new Rectangle(key*9, 500,14,60);
+				whiteRect.setFill(Color.WHITE);
 				return true;
 			}
 		}
-	}
-	
-	public boolean isTriggered()
-	{
-		return triggered;
 	}
 	
 	public int getKey()
 	{
 		return key;
+	}
+	public void changeColor(Color c)
+	{
+		 if(color)
+		 {
+			 keyRect.setFill(c);
+		 }
+		 else
+		 {
+			keyRect.setFill(c);
+			whiteRect.setFill(c);
+		 } 
+	}
+	public void orginalColor()
+	{
+		if(color)
+		 {
+			  keyRect.setFill(Color.BLACK);
+		 }
+		 else
+		 {
+		 	keyRect.setFill(Color.WHITE);
+			whiteRect.setFill(Color.WHITE);
+	   	 }
+	}
+	public Rectangle getRect()
+	{
+		return keyRect;
+	}
+	public Rectangle getWRect()
+	{
+		return whiteRect;
 	}
 	public boolean getColor()
 	{
@@ -87,32 +147,8 @@ public class Key
 	{
 		return audio;
 	}
-	public void changeColor()
+	public String getNoteName()
 	{
-		if(!color)
-		{
-		    graphics.setFill(Color.LIGHTGREY);
-		    graphics.fillRect(x,500,width,60);
-		    graphics.fillRect(key*9,560,15,60);
-		}
-		else
-		{
-			graphics.setFill(Color.DARKGRAY);
-			graphics.fillRect(key*9+5, 500,8,60);
-		}
-	}
-	public void originalColor()
-	{
-		if(!color)
-		{
-		    graphics.setFill(Color.WHITE);
-		    graphics.fillRect(x,500,width,60);
-		    graphics.fillRect(key*9,560,15,60);
-		}
-		else
-		{
-			graphics.setFill(Color.BLACK);
-			graphics.fillRect(key*9+5,500,8,60);
-		}
+		return NOTE_NAMES[note];
 	}
 }
