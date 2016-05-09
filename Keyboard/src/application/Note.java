@@ -1,6 +1,9 @@
 package application;
 
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -9,6 +12,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -26,12 +30,10 @@ public class Note
 	private Color paint;
 	private Key changeColor;
 	private boolean in=true;
-	private Pane x;
 	//public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
-	public Note(Pane s,float f,int l,long e,float tiks,Color color,Key Corrs)
+	public Note(float f,int l,long e,float tiks,Color color,Key Corrs)
 	{
-		x=s;
 		paint = color;
 		key=l-12;
 		time=(long) f;
@@ -41,7 +43,7 @@ public class Note
 		//System.out.println("Sup     "+length+ " " +ticks);
 	}
 	
-	public void play()
+	public void play(Pane x)
 	{
 		boolean color;
 		int n=(key+9)%12;
@@ -50,11 +52,12 @@ public class Note
 			color = n%2==1;
 		else
 			color = n%2==0&&n!=5;
-		this.draw(color,length);
+		this.draw(color);
 		//System.out.println("same"+(length/ticks));
         DoubleProperty xdouble  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
         note.setFill(paint);
+
         timeline = new Timeline(
             new KeyFrame(Duration.seconds(0),
                     new KeyValue(xdouble, 0),
@@ -70,12 +73,15 @@ public class Note
         		{
         			public void handle(ActionEvent event)
         			{
-        				//System.out.println("hi");
-        				changeColor.orginalColor();
         				x.getChildren().remove(note);
+        				//System.out.println("done");
+        				changeColor.orginalColor();
+        				//System.out.println(checker.size());
+        				
         				
         			}
         		});
+        //timeline.setAutoReverse(true);
         AnimationTimer timer = new AnimationTimer() 
         {
             @Override
@@ -87,11 +93,11 @@ public class Note
                 note.setTranslateY(y.doubleValue());
                 //note.translateXProperty();
                 note.translateYProperty();  
-                if(in && timeline.getCurrentTime().toSeconds()>((note.getHeight()/1000000)+500)/180)
+                if(in&&timeline.getCurrentTime().toSeconds()>((note.getHeight()/1000000)+500)/180)
                 {
                 	//System.out.println("out");
                 	changeColor.changeColor(paint);
-                	in=false;
+                	in = false;
                 }
                 //System.out.println(y.doubleValue());
            }
@@ -111,18 +117,18 @@ public class Note
         timer.start();
         timeline.play();
 	}
-	public void draw(boolean black,double le)
+	public void draw(boolean black)
 	{
 		//System.out.println(length);
 		//System.out.println(180*((le/ticks)/1000000));
 		if(black)
 		{
 			
-			note = new Rectangle(calculateWhite()*15.38+13,-(180*((le/ticks)/1000000)),4,180*((le/ticks)/1000000));
+			note = new Rectangle(calculateWhite()*15.38+13,-(180*((length/ticks)/1000000)),4,180*((length/ticks)/1000000));
 		}
 		else
 		{
-			note = new Rectangle(calculateWhite()*15.38+3,-(180*((le/ticks)/1000000)),10,180*((le/ticks)/1000000));
+			note = new Rectangle(calculateWhite()*15.38+3,-(180*((length/ticks)/1000000)),10,180*((length/ticks)/1000000));
 		}
 		//System.out.println(time +" j "+(note.getY()-(-note.getHeight())));
 		//System.out.println(note.getY());
@@ -154,6 +160,15 @@ public class Note
 	public long getTime()
 	{
 		return time;
+	}
+	private Note search(ArrayList<Note> s)
+	{
+		for(Note n:s)
+		{
+			if((n.getNote().contains(new Point2D(this.getNote().getX(),this.getNote().getY()))))
+				return n;
+		}
+		return null;
 	}
 	private int calculateWhite()
 	{

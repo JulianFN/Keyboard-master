@@ -3,6 +3,7 @@ package application;
 import java.net.URL;
 
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -38,7 +39,7 @@ public class Key
 			 public void handle(KeyEvent event)
 			 {
 				 char key = event.getText().charAt(0);
-				 if(key==(char)(i+38))
+				 if(event.getCode()!= KeyCode.ESCAPE&&key==(char)(i+38))
 				 {
 					 if(!triggered)
 					 {
