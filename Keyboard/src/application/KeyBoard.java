@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -23,7 +24,7 @@ public class KeyBoard
 	private Canvas c = new Canvas(800,600);
 	private Key[] keys = new Key[88];
 	
-	public KeyBoard(Stage primaryStage,String str) 
+	public KeyBoard(Stage primaryStage,String str,Pane menu) 
 	{
 		try 
 		{
@@ -38,7 +39,7 @@ public class KeyBoard
 					pane.getChildren().add(keys[x].getWRect());
 				}
 			}
-			SongReader s = new SongReader(str,notes,keys);
+			SongReader s = new SongReader(str+".mid",notes,keys,primaryStage,menu);
 			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
 			
 			
@@ -58,11 +59,28 @@ public class KeyBoard
 		primaryStage.setScene(scene);
 		//primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
 		
+		primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>()
+		{
+
+			@Override
+			public void handle(KeyEvent event) 
+			{
+				if(event.getCode() == KeyCode.ESCAPE)
+				{
+					s.getSequencer().stop();
+					Group temp = new Group();
+					temp.getChildren().add(menu);
+					primaryStage.setScene(new Scene(temp));
+				}
+			}
+
+		}); 
 		for(int z =0;z<keys.length;z++)
 		{
 			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED,keys[z].getRect().getOnKeyPressed());
 			primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED,keys[z].getRect().getOnKeyReleased());
 		}
+			
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.show();
 		 

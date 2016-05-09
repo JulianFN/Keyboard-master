@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -12,7 +13,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -27,13 +31,18 @@ public class NoteQueue
 	private Timeline timeLine;
 	Sequencer sequencer;
 	private Note note;
+	private Stage finished;
+	private Pane paneM;
+	private ArrayList<Note> amountOut = new ArrayList<Note>();
 	
-	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq)
+	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq,Stage f,Pane menu)
 	{
 		sequencer=seq;
 		pane=pan;
 		ticks=tickPerMic;
 		seconds=s;
+		finished = f;
+		paneM = menu;
 	}
 	public void add(Note s)
 	{
@@ -66,6 +75,19 @@ public class NoteQueue
 							startS(on,time);
 					}
 				};
+//		timeLine.setOnFinished((event) ->
+//		{
+//			try {
+//				wait(300000000);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			Group temp = new Group();
+//			temp.getChildren().add(paneM);
+//			finished.setScene(new Scene(temp));
+//		});
+		//if()
 		timer.start();
 		timeLine.play();
 	}
@@ -78,7 +100,7 @@ public class NoteQueue
 		{
 			if(time.longValue()>notes.peekFirst().getTime())
 			{
-				notes.pollFirst().play();
+				notes.pollFirst().play(pane);
 				return true;
 			}
 		}
@@ -96,6 +118,7 @@ public class NoteQueue
 			{
 				e.printStackTrace();
 			}
+			//sequencer.
 			sequencer.start();
 			j=true;
 		}
@@ -104,6 +127,10 @@ public class NoteQueue
 	{
 		return notes.peekFirst();
 	}
+//	public Sequencer getSequencer()
+//	{
+//		return sequencer;
+//	}
 	class NoteTimeComparator implements Comparator<Note>
 	{
 
