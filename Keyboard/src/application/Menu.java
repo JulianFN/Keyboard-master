@@ -25,15 +25,15 @@ public class Menu extends Application {
 	{
 		Group ro = new Group();
 		Pane p = new Pane();
-		File v = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		v = new File(v.getParentFile().getAbsolutePath() + "/music");
+		File v = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+"../music");
 		// Scanner s = new Scanner(v);
-		System.out.println(v.toString());
+		System.out.println(v.getAbsolutePath());
 		// while(s.hasNext())
 		// {
 		// paths.add(s.nextLine());
 		// }
 		// s.close();
+                System.out.println(v.exists());
 		paths = new ArrayList<String>(Arrays.asList(v.list()));
 		System.out.println(paths.toString());
 		for (int i = 0; i < paths.size(); i++) {

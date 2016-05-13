@@ -15,6 +15,8 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -33,7 +35,7 @@ public class NoteQueue
 	private Note note;
 	private Stage finished;
 	private Pane paneM;
-	private ArrayList<Note> amountOut = new ArrayList<Note>();
+	private TextField points = new TextField("0");
 	
 	public NoteQueue(float tickPerMic, long s,Pane pan,Sequencer seq,Stage f,Pane menu)
 	{
@@ -43,6 +45,13 @@ public class NoteQueue
 		seconds=s;
 		finished = f;
 		paneM = menu;
+		points.setMaxWidth(100);
+		points.setEditable(false);
+		points.setMouseTransparent(true);
+		points.setFocusTraversable(false);
+		points.autosize();
+		points.setLayoutX(Note.SCREEN_BOUNDS.getWidth()-100);
+		points.setLayoutY(0);
 	}
 	public void add(Note s)
 	{
@@ -50,6 +59,7 @@ public class NoteQueue
 	}
 	public void start()
 	{
+		pane.getChildren().add(points);
 		time = new SimpleLongProperty();
 		notes.sort(new NoteTimeComparator());
 		note = notes.peekFirst();
@@ -100,7 +110,7 @@ public class NoteQueue
 		{
 			if(time.longValue()>notes.peekFirst().getTime())
 			{
-				notes.pollFirst().play(pane);
+				notes.pollFirst().play(pane,points);
 				return true;
 			}
 		}
