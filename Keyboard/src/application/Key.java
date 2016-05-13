@@ -1,39 +1,52 @@
 package application;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 
+/**
+ * 
+ * @author Julian Nieto
+ * Description: Actually keys for {@link KeyBoard}
+ */
 public class Key 
 {
-	private boolean color;
+	public static final Rectangle2D SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
+	private boolean black;
 	private int key;
 	private int note;
 	private AudioClip audio;
 	private Rectangle keyRect;
 	private Rectangle whiteRect;
+	private LinkedList<Color> color;
 	private boolean triggered=false;
 	public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 	
+	/**
+	 * Constructs all of the keys
+	 * @param i
+	 */
 	public Key(int i)
 	{
-		
-		URL resource = getClass().getResource("Sound"+1+".wav");
-		//audio = new AudioClip(resource.toString());
+		color = new LinkedList<Color>();
 		key=i;
 		note=(i+9)%12;
-		int octave = ((i+9) / 12)-1;
 		if(note<5)
-			color = note%2==1;
+			black = note%2==1;
 		else
-			color = note%2==0&&note!=5;
+			black = note%2==0&&note!=5;
 		this.draw();
-		System.out.println(octave+" "+note+" "+key+" "+color);
+		
+		//KeyEvents
 		keyRect.setOnKeyPressed(new EventHandler<KeyEvent>()
 		{
 			 public void handle(KeyEvent event)
@@ -43,8 +56,12 @@ public class Key
 				 {
 					 if(!triggered)
 					 {
-						 audio.play(.2);
+						 //audio.play(.2)
 						 triggered=true;
+						 if(black)
+							 changeColor(Color.DARKGRAY);
+						 else
+							 changeColor(Color.LIGHTGRAY);
 					 }
 				 }
 			 }
@@ -56,14 +73,16 @@ public class Key
 				 char key = event.getText().charAt(0);
 				 if(key==(char)(i+38))
 				 {
-					 if(color)
+					 if(black)
 					 {
-						  keyRect.setFill(Color.BLACK);
+						 color.remove(Color.DARKGRAY);
+						  keyRect.setFill(color.peek());
 					 }
 					 else
 					 {
-					 	keyRect.setFill(Color.WHITE);
-						whiteRect.setFill(Color.WHITE);
+						color.remove(Color.LIGHTGRAY);
+					    keyRect.setFill(color.peek());
+						whiteRect.setFill(color.peek());
 				   	 }
 					 triggered=false;
 				}
@@ -71,63 +90,83 @@ public class Key
 		});
 	}
 	
-	public boolean draw()
+	/**
+	 * Draws All of the keys
+	 * @return
+	 */
+	public void draw()
 	{
-		int x = calculateWhite();
-		if(color)
+		int x = calculateWhite(); // Calculates amount of whites determine spot
+		double height =(SCREEN_BOUNDS.getHeight()/8);
+		double offset = SCREEN_BOUNDS.getWidth()/52-SCREEN_BOUNDS.getWidth()/208;
+		//if Black
+		if(black)
 		{
-			keyRect = new Rectangle(15.38*x+13.13,500,4.5,60);
-			
+			keyRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+offset,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),(SCREEN_BOUNDS.getWidth()/104),height);
+			color.push(Color.BLACK);
 			keyRect.setFill(Color.BLACK);
-			return true;
 		}
+		
+		//White
 		else
 		{
-			keyRect = new Rectangle(15.38*x,560,15.38,60);
+			color.push(Color.WHITE);
+			keyRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/8),SCREEN_BOUNDS.getWidth()/52,height);
 			keyRect.setFill(Color.WHITE);
 			if(key ==0||key==87)
 			{
-				whiteRect = new Rectangle(15.38*x,500,15.38,60);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),SCREEN_BOUNDS.getWidth()/52,height);
 				whiteRect.setFill(Color.WHITE);
 			}
 			else if( note ==4||note ==11)
 			{
-				whiteRect = new Rectangle(15.38*x+2.25, 500,13.13,60);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),offset,height);
 				whiteRect.setFill(Color.WHITE);
-				return true;
 			}
 			else if(note ==2 || note ==7||note==9)
 			{
-				whiteRect = new Rectangle(15.38*x+2.5, 500,10,60);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),SCREEN_BOUNDS.getWidth()/104,height);
 				whiteRect.setFill(Color.WHITE);
-				return true;
 			}
 			else
 			{
-				whiteRect = new Rectangle(15.38*x,500,13.13,60);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),offset,height);
 				whiteRect.setFill(Color.WHITE);
 			}
-			
+//			whiteRect = new Rectangle(0.0,10.10);
 		}
-		return color;
 	}
 	
+	/**
+	 * gets the Key
+	 * @return
+	 */
 	public int getKey()
 	{
 		return key;
 	}
+	/**
+	 * Changes Color to c
+	 * @param c Color
+	 */
 	public void changeColor(Color c)
 	{
-		 if(color)
+		 color.addFirst(c);
+		 if(black)
 		 {
-			 keyRect.setFill(c);
+			 keyRect.setFill(color.peek());
 		 }
 		 else
 		 {
-			keyRect.setFill(c);
-			whiteRect.setFill(c);
+			keyRect.setFill(color.peek());
+			whiteRect.setFill(color.peek());
 		 } 
 	}
+	
+	/**
+	 * Calculates amount of Whites before it
+	 * @return number of whites
+	 */
 	private int calculateWhite()
 	{
 		boolean c;
@@ -144,33 +183,49 @@ public class Key
 		}
 		return x;
 	}
-	public void orginalColor()
+	public void removeColor(Color c)
 	{
-		if(color)
+		color.remove(c);
+		if(black)
 		 {
-			  keyRect.setFill(Color.BLACK);
+			  keyRect.setFill(color.peek());
 		 }
 		 else
 		 {
-		 	keyRect.setFill(Color.WHITE);
-			whiteRect.setFill(Color.WHITE);
+		 	keyRect.setFill(color.peek());
+			whiteRect.setFill(color.peek());
 	   	 }
 	}
+	
+	/**
+	 * gets the Rectangle
+	 * @return
+	 */
 	public Rectangle getRect()
 	{
 		return keyRect;
 	}
+	
+	public boolean isPlaying()
+	{
+		return triggered;
+	}
+	/**
+	 * Returns extra Rectangles for Whites
+	 * @return
+	 */
 	public Rectangle getWRect()
 	{
 		return whiteRect;
 	}
-	public boolean getColor()
+	
+	public LinkedList<Color> getColor()
 	{
 		return color;
 	}
-	public AudioClip getAudio()
+	public boolean getBlack()
 	{
-		return audio;
+		return black;
 	}
 	public String getNoteName()
 	{

@@ -1,10 +1,11 @@
 package application;
-	
 
 import java.util.ArrayList;
 
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,93 +14,103 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-
-public class KeyBoard  
+/**
+ * 
+ * @author Julian Nieto Description: This class is one that deals with the stage
+ *         and adding and of the panes.
+ */
+public class KeyBoard 
 {
-	private Rectangle Rect = new Rectangle(100, 40, 15, 150);
-	public static final double D = 20;  // diameter.
-	private Canvas c = new Canvas(800,600);
-	private Key[] keys = new Key[88];
-	
-	public KeyBoard(Stage primaryStage,String str,Pane menu) 
+	private final Rectangle2D SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
+	// Canvas for Background
+	private Canvas c = new Canvas(SCREEN_BOUNDS.getWidth(),SCREEN_BOUNDS.getHeight());
+	private Key[] keys = new Key[88]; // Keys
+
+	/**
+	 * 
+	 * @param primaryStage
+	 * @param str song name
+	 * @param menu 
+	 */
+	public KeyBoard(Stage primaryStage, String str, Pane menu) 
 	{
 		try 
 		{
 			Pane notes = new Pane();
 			Pane pane = new Pane();
-			for(int x =0;x<keys.length;x++)
+
+			// adding Keys
+			for (int x = 0; x < keys.length; x++) 
 			{
 				keys[x] = new Key(x);
 				pane.getChildren().add(keys[x].getRect());
-				if(!keys[x].getColor())
+				if (!keys[x].getBlack())
 				{
+					// adding whites
 					pane.getChildren().add(keys[x].getWRect());
 				}
 			}
-			SongReader s = new SongReader(str+".mid",notes,keys,primaryStage,menu);
-			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg",800, 600,true,false),0,0);
+
+			primaryStage.setX(SCREEN_BOUNDS.getMinX());
+			primaryStage.setY(SCREEN_BOUNDS.getMinY());
+			primaryStage.setWidth(SCREEN_BOUNDS.getWidth());
+			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
 			
-			
-			//Note note =new Note(notes,2,13,200);
-	        
+			// Calls SongReader
+			SongReader s = new SongReader(str + ".mid", notes, keys, primaryStage, menu);
+
+			// draws background
+			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg", SCREEN_BOUNDS.getWidth(),SCREEN_BOUNDS.getHeight(), true, false), 0, 0);
+
+			// add the panes
 			Group root = new Group();
 			root.getChildren().add(c);
 			root.getChildren().add(notes);
 			root.getChildren().add(pane);
 			Scene scene = new Scene(root);
-			
-//			primaryStage.setX(SCREEN_BOUNDS.getMinX());
-//			primaryStage.setY(SCREEN_BOUNDS.getMinY());
-//			primaryStage.setWidth(SCREEN_BOUNDS.getWidth());
-//			primaryStage.setHeight(SCREEN_BOUNDS.getHeight());
-			
-		primaryStage.setScene(scene);
-		//primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
-		
-		primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>()
-		{
+			primaryStage.setScene(scene);
+			// primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,);
 
-			@Override
-			public void handle(KeyEvent event) 
+			//adding keyEvents
+			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
 			{
-				if(event.getCode() == KeyCode.ESCAPE)
+
+				@Override
+				public void handle(KeyEvent event) 
 				{
-					s.getSequencer().stop();
-					Group temp = new Group();
-					temp.getChildren().add(menu);
-					primaryStage.setScene(new Scene(temp));
+					if (event.getCode() == KeyCode.ESCAPE) 
+					{
+						s.getSequencer().stop();
+						Group temp = new Group();
+						temp.getChildren().add(menu);
+						primaryStage.setScene(new Scene(temp));
+					}
 				}
+
+			});
+			
+			
+			for (int z = 0; z < keys.length; z++) 
+			{
+				primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keys[z].getRect().getOnKeyPressed());
+				primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, keys[z].getRect().getOnKeyReleased());
 			}
 
-		}); 
-		for(int z =0;z<keys.length;z++)
-		{
-			primaryStage.getScene().addEventHandler(KeyEvent.KEY_PRESSED,keys[z].getRect().getOnKeyPressed());
-			primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED,keys[z].getRect().getOnKeyReleased());
-		}
-			
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.show();
-		 
-		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
-		{
-		    @Override
-		    public void handle(WindowEvent event) {
-		    	System.exit(0);
-		    }
-		});
-		}
-		catch(Exception e) 
-		{
+
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					System.exit(0);
+				}
+			});
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-//	public static void main(String[] args) 
-//	{
-//		launch(args);
-//	}
 }
