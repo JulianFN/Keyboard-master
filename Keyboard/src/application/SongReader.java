@@ -30,14 +30,15 @@ public class SongReader {
 	private ArrayList<long[]> temp = new ArrayList<long[]>();
 	public static final String[] NOTE_NAMES = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
 
-	public SongReader(String File, Pane pan, Key[] keys,Stage f,Pane menu) throws Exception {
-		File path = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+	public SongReader(String file, Pane pan, Key[] keys,Stage f,Pane menu) throws Exception {
+		File path = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+"../music/"+file);
 		String s = path.getParentFile().getAbsolutePath();
-		Sequence sequence = MidiSystem.getSequence(new File(s + "/music/" + File));
+		System.out.println(path.getAbsolutePath());
+		Sequence sequence = MidiSystem.getSequence(path);
 		microSeconds = sequence.getMicrosecondLength();
 		tickPerMic = (sequence.getTickLength() / (float) (microSeconds));
 		sequencer = MidiSystem.getSequencer();
-		InputStream fi = new BufferedInputStream(new FileInputStream(new File(s + "/music/" + File)));
+		InputStream fi = new BufferedInputStream(new FileInputStream(path));
 		// System.out.println(sequencer.getTempoInBPM());
 		sequencer.open();
 		sequencer.setSequence(fi);

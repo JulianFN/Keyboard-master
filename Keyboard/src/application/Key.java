@@ -111,26 +111,31 @@ public class Key
 		else
 		{
 			color.push(Color.WHITE);
-			keyRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/8),SCREEN_BOUNDS.getWidth()/52,height);
+			keyRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/8),
+					SCREEN_BOUNDS.getWidth()/52,height);
 			keyRect.setFill(Color.WHITE);
 			if(key ==0||key==87)
 			{
-				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),SCREEN_BOUNDS.getWidth()/52,height);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),
+						SCREEN_BOUNDS.getWidth()/52,height);
 				whiteRect.setFill(Color.WHITE);
 			}
 			else if( note ==4||note ==11)
 			{
-				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),offset,height);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, 
+						SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),offset,height);
 				whiteRect.setFill(Color.WHITE);
 			}
 			else if(note ==2 || note ==7||note==9)
 			{
-				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),SCREEN_BOUNDS.getWidth()/104,height);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x+SCREEN_BOUNDS.getWidth()/208, 
+						SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),SCREEN_BOUNDS.getWidth()/104,height);
 				whiteRect.setFill(Color.WHITE);
 			}
 			else
 			{
-				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),offset,height);
+				whiteRect = new Rectangle((SCREEN_BOUNDS.getWidth()/52)*x,SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4),
+						offset,height);
 				whiteRect.setFill(Color.WHITE);
 			}
 //			whiteRect = new Rectangle(0.0,10.10);
@@ -226,6 +231,10 @@ public class Key
 	public boolean getBlack()
 	{
 		return black;
+	}
+	public void setPlaying(boolean mid)
+	{
+		triggered= mid;
 	}
 	public String getNoteName()
 	{
