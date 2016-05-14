@@ -28,7 +28,7 @@ public class KeyBoard
 	private final Rectangle2D SCREEN_BOUNDS = Screen.getPrimary().getVisualBounds();
 	// Canvas for Background
 	private Canvas c = new Canvas(SCREEN_BOUNDS.getWidth(),SCREEN_BOUNDS.getHeight());
-	private Key[] keys = new Key[88]; // Keys
+	public static final Key[] keys = new Key[88]; // Keys
 
 	/**
 	 * 
@@ -40,9 +40,14 @@ public class KeyBoard
 	{
 		try 
 		{
+			MidiHandle device = new MidiHandle();
 			Pane notes = new Pane();
 			Pane pane = new Pane();
 
+			if(device.getKeyboard() ==null)
+			{
+				System.out.println("good");
+			}
 			// adding Keys
 			for (int x = 0; x < keys.length; x++) 
 			{
@@ -64,7 +69,7 @@ public class KeyBoard
 			SongReader s = new SongReader(str + ".mid", notes, keys, primaryStage, menu);
 
 			// draws background
-			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg", SCREEN_BOUNDS.getWidth(),SCREEN_BOUNDS.getHeight(), true, false), 0, 0);
+			c.getGraphicsContext2D().drawImage(new Image("/application/BackOfGround.jpg", SCREEN_BOUNDS.getWidth(),SCREEN_BOUNDS.getHeight(), false, false), 0, 0);
 
 			// add the panes
 			Group root = new Group();
