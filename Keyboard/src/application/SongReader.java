@@ -21,8 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class SongReader {
-	public static final int NOTE_ON = 0x90;
-	public static final int NOTE_OFF = 0x80;
+	public static final int NOTE_ON = 144;
+	public static final int NOTE_OFF = 128;
 	private long microSeconds;
 	private float tickPerMic;
 	private Sequencer sequencer;

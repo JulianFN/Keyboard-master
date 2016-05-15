@@ -19,11 +19,22 @@ public class Input implements Receiver
 	{
 		if(message instanceof ShortMessage)
 		{
-			key = ((ShortMessage) message).getData2()-21;
-			KeyBoard.keys[key].changeColor(Color.LIGHTGREY);
-			KeyBoard.keys[key].setPlaying(true);
-			
-			
+			key = (((ShortMessage) message).getData1()-21);
+			ShortMessage m = (ShortMessage) message;
+			if(
+					//m.getCommand()==144 && 
+					m.getData2()>0)
+			{
+				System.out.println("cool "+ m.getData2());
+				System.out.println("not cool "+m.getData1());
+				
+				KeyBoard.keys[key].changeColor(Color.LIGHTGREY);
+				KeyBoard.keys[key].setPlaying(true);	
+			}
+			else
+			{
+				this.close();
+			}
 		}
 	}
 
@@ -32,5 +43,6 @@ public class Input implements Receiver
 	{
 		KeyBoard.keys[key].removeColor(Color.LIGHTGREY);
 		KeyBoard.keys[key].setPlaying(false);
+		//System.out.println("FL:DJSLF:JSLD:FJK");
 	}
 }
