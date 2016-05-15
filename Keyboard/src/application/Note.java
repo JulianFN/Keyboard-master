@@ -94,7 +94,7 @@ public class Note
 				if(timeline.getCurrentTime().toSeconds()>(SCREEN_BOUNDS.getHeight()-(SCREEN_BOUNDS.getHeight()/4))/time &&
 						timeline.getCurrentTime().toSeconds()<timeline.getTotalDuration().toSeconds() && changeColor.isPlaying())
 				{
-					System.out.println("yes");
+					
 					tex.setText(""+(Integer.parseInt(tex.getText())+1));
 				}
 					

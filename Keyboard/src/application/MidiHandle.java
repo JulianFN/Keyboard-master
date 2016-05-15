@@ -5,12 +5,14 @@ import java.util.List;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
 public class MidiHandle
 {
-	MidiDevice keyboard;
-	List<Transmitter> transmitters;
+	private MidiDevice keyboard;
+	private List<Transmitter> transmitters;
+	private Receiver r;
 	
 	public MidiHandle()
 	{
@@ -28,16 +30,18 @@ public class MidiHandle
             for(int j = 0; j<transmitters.size();j++) 
             {
             	//create a new receiver
-            	transmitters.get(j).setReceiver(
+            	//transmitters.get(j).setReceiver(
                     //using my own MidiInputReceiver
-                     new Input(keyboard.getDeviceInfo().toString()));
+                  //   new Input(keyboard.getDeviceInfo().toString()));
             }
-
-            Transmitter trans = keyboard.getTransmitter();
-            trans.setReceiver(new Input(keyboard.getDeviceInfo().toString()));
+            
+            //trans.setReceiver(new Input(keyboard.getDeviceInfo().toString()));
 
             //open each device
             keyboard.open();
+            Transmitter trans = keyboard.getTransmitter();
+            trans.setReceiver(new Input(keyboard.getDeviceInfo().toString()));
+
             //if code gets this far without throwing an exception
             //print a success message
             System.out.println(keyboard.getDeviceInfo()+" Was Opened");
@@ -50,10 +54,10 @@ public class MidiHandle
 		}
 		
 	}
-	public List<Transmitter> getTransmitters()
-	{
-		return transmitters;
-	}
+//	public List<Transmitter> getTransmitters()
+//	{
+//		return transmitters;
+//	}
 	public MidiDevice getKeyboard()
 	{
 		return keyboard;
