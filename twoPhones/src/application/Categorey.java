@@ -1,5 +1,9 @@
 package application;
 
-public class Categorey {
-
+public class Categorey 
+{
+	public Categorey()
+	{
+		
+	}
 }
