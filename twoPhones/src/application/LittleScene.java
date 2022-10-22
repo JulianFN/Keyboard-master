@@ -21,7 +21,7 @@ public class LittleScene
 	}
 	private boolean addOne()
 	{
-		File v = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+" ../music");
+		File v = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+ "Keyboard/resources/music");
 		String[] files = v.list();
 		for(String x:files)
 		{
